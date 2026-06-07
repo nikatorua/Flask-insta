@@ -139,24 +139,24 @@ http://127.0.0.1:5000
 
 1. გახსენი `http://127.0.0.1:5000` — გადამისამართდება `/login`-ზე
 
-<img width="500" height="500" alt="image" src="https://github.com/user-attachments/assets/1c193cc3-d2c2-4758-b526-d5c0245dd229" />
+<img width="700" height="500" alt="image" src="https://github.com/user-attachments/assets/1c193cc3-d2c2-4758-b526-d5c0245dd229" />
 
 3. **რეგისტრაცია:** შექმენი ანგარიში
 
-<img width="500" height="500" alt="image" src="https://github.com/user-attachments/assets/73a7b2ff-dc16-4caf-940f-9c4cce12b5f9" />
+<img width="700" height="500" alt="image" src="https://github.com/user-attachments/assets/73a7b2ff-dc16-4caf-940f-9c4cce12b5f9" />
 
 5. **ახალი პოსტი:** დააჭირე `+` ნავბარში → ატვირთე სურათი (drag-and-drop ან კლიკი)
 
-<img width="500" height="500" alt="image" src="https://github.com/user-attachments/assets/13c7ebf4-d892-474a-acd4-fb0d40311e70" />
+<img width="700" height="500" alt="image" src="https://github.com/user-attachments/assets/13c7ebf4-d892-474a-acd4-fb0d40311e70" />
 
 7. **ლაიქი / კომენტარი:** გახსენი ნებისმიერი პოსტი
 
-<img width="500" height="500" alt="image" src="https://github.com/user-attachments/assets/87f9cfcf-d967-416e-80cb-fad50744c765" />
+<img width="700" height="500" alt="image" src="https://github.com/user-attachments/assets/1b7ccd5d-408f-4925-884e-42752654bf37" />
 
 9. **პროფილი:** ავატარზე კლიკი ნავბარში → "პროფილი" → ფოტოს ატვირთვა
 
-<img width="500" height="500" alt="image" src="https://github.com/user-attachments/assets/bb859bdd-f521-4358-9026-7265df23628e" />
+<img width="700" height="500" alt="image" src="https://github.com/user-attachments/assets/bb859bdd-f521-4358-9026-7265df23628e" />
 
 11. **ძებნა:** ნავბარის ველი
 
-<img width="500" height="500" alt="image" src="https://github.com/user-attachments/assets/758a4f24-834a-4444-b556-7f19a8f9dd2e" />
+<img width="700" height="500" alt="image" src="https://github.com/user-attachments/assets/758a4f24-834a-4444-b556-7f19a8f9dd2e" />
