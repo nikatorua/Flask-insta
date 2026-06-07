@@ -1,0 +1,121 @@
+{% extends 'base.html' %}
+{% block title %}ახალი პოსტი — FlaskSocial{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-12 col-md-8 col-lg-6">
+
+    <div class="d-flex align-items-center gap-2 mb-4">
+      <a href="{{ url_for('main.feed') }}" class="btn-ghost">
+        <i class="fa fa-arrow-left"></i>
+      </a>
+      <h5 class="mb-0 fw-bold">ახალი პოსტი</h5>
+    </div>
+
+    <div style="background:var(--card);border:1px solid var(--border-lg);border-radius:20px;padding:2rem;">
+      <form method="post" enctype="multipart/form-data" novalidate>
+        {{ form.hidden_tag() }}
+
+        <div class="mb-3">
+          {{ form.title.label(class_='form-label') }}
+          {{ form.title(class_='form-control' + (' is-invalid' if form.title.errors else ''),
+                        placeholder='სათაური...') }}
+          {% for e in form.title.errors %}
+            <div class="invalid-feedback">{{ e }}</div>
+          {% endfor %}
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">სურათი</label>
+          {% for e in form.image.errors %}
+            <div class="text-danger mb-1" style="font-size:0.78rem;">{{ e }}</div>
+          {% endfor %}
+
+          <div class="upload-zone" id="uploadZone">
+            {{ form.image(id='imgInput', accept='image/*', class_='d-none') }}
+
+            <div class="upload-prompt" id="uploadPrompt">
+              <i class="fa fa-cloud-arrow-up upload-prompt-icon"></i>
+              <p>სურათის ასარჩევად დააჭირე ან გადმოიტანე</p>
+              <small>JPG · PNG · GIF · WEBP</small>
+            </div>
+
+            <img id="imgPreview" class="upload-preview" src="" alt=""
+                 style="display:none;">
+
+            <div class="upload-hover-overlay">
+              <i class="fa fa-camera"></i>
+              <span>სურათის შეცვლა</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="mb-4">
+          {{ form.description.label(class_='form-label') }}
+          {{ form.description(class_='form-control' + (' is-invalid' if form.description.errors else ''),
+                              placeholder='გაუზიარე მომენტი...', rows=4) }}
+          {% for e in form.description.errors %}
+            <div class="invalid-feedback">{{ e }}</div>
+          {% endfor %}
+        </div>
+
+        {{ form.submit(class_='btn btn-grad w-100') }}
+      </form>
+    </div>
+
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+  (function () {
+    const zone    = document.getElementById('uploadZone');
+    const input   = document.getElementById('imgInput');
+    const preview = document.getElementById('imgPreview');
+    const prompt  = document.getElementById('uploadPrompt');
+    let dragCount = 0;
+
+    zone.addEventListener('click', () => input.click());
+
+    input.addEventListener('change', () => {
+      if (input.files[0]) showFile(input.files[0]);
+    });
+
+    zone.addEventListener('dragenter', e => {
+      e.preventDefault();
+      if (++dragCount === 1) zone.classList.add('drag-active');
+    });
+
+    zone.addEventListener('dragleave', () => {
+      if (--dragCount === 0) zone.classList.remove('drag-active');
+    });
+
+    zone.addEventListener('dragover', e => e.preventDefault());
+
+    zone.addEventListener('drop', e => {
+      e.preventDefault();
+      dragCount = 0;
+      zone.classList.remove('drag-active');
+      const file = e.dataTransfer.files[0];
+      if (!file) return;
+      if (!file.type.startsWith('image/')) {
+        zone.style.borderColor = 'var(--danger)';
+        setTimeout(() => zone.style.borderColor = '', 1200);
+        return;
+      }
+      const dt = new DataTransfer();
+      dt.items.add(file);
+      input.files = dt.files;
+      showFile(file);
+    });
+
+    function showFile(file) {
+      preview.src = URL.createObjectURL(file);
+      preview.style.display = 'block';
+      prompt.style.display  = 'none';
+      zone.classList.add('has-image');
+    }
+  })();
+</script>
+{% endblock %}

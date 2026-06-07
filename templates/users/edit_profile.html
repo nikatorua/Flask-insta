@@ -1,0 +1,105 @@
+{% extends 'base.html' %}
+{% block title %}პროფილის რედაქტირება — FlaskSocial{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-12 col-md-7 col-lg-5">
+
+    <div class="d-flex align-items-center gap-2 mb-4">
+      <a href="{{ url_for('users.profile', user_id=current_user.id) }}" class="btn-ghost">
+        <i class="fa fa-arrow-left"></i>
+      </a>
+      <h5 class="mb-0 fw-bold">პროფილის რედაქტირება</h5>
+    </div>
+
+    <div style="background:var(--card);border:1px solid var(--border-lg);border-radius:20px;padding:2rem;">
+
+      <div class="text-center mb-4">
+        <div class="av-upload-zone mx-auto" id="avatarZone" title="ფოტოს შეცვლა">
+          {% if current_user.profile_pic_data %}
+            <img id="avPreview"
+                 src="{{ url_for('users.avatar', user_id=current_user.id) }}"
+                 class="av av-lg" alt="">
+          {% else %}
+            <span id="avPh" class="av-ph av-lg-ph">{{ current_user.username[0]|upper }}</span>
+            <img id="avPreview" src="" class="av av-lg d-none" alt="">
+          {% endif %}
+          <div class="av-upload-overlay">
+            <i class="fa fa-camera"></i>
+          </div>
+        </div>
+        <p style="color:var(--text-muted);font-size:0.73rem;margin-top:0.5rem;">
+          ფოტოს შეცვლა
+        </p>
+      </div>
+
+      <form method="post" enctype="multipart/form-data" novalidate>
+        {{ form.hidden_tag() }}
+
+        {{ form.profile_pic(id='picInput', accept='image/*', class_='d-none') }}
+
+        {% for e in form.profile_pic.errors %}
+          <div class="text-danger mb-2" style="font-size:0.78rem;">{{ e }}</div>
+        {% endfor %}
+
+        <div class="mb-4">
+          {{ form.bio.label(class_='form-label') }}
+          {{ form.bio(class_='form-control', rows=3,
+                      placeholder='მოგვიყევი შენს შესახებ...') }}
+        </div>
+
+        {{ form.submit(class_='btn btn-grad w-100') }}
+      </form>
+    </div>
+
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+  (function () {
+    const zone  = document.getElementById('avatarZone');
+    const input = document.getElementById('picInput');
+    const prev  = document.getElementById('avPreview');
+    const ph    = document.getElementById('avPh');
+
+    zone.addEventListener('click', () => input.click());
+
+    input.addEventListener('change', () => {
+      if (input.files[0]) showFile(input.files[0]);
+    });
+
+    let dragCount = 0;
+
+    zone.addEventListener('dragenter', e => {
+      e.preventDefault();
+      if (++dragCount === 1) zone.style.outline = '3px solid var(--g1)';
+    });
+
+    zone.addEventListener('dragleave', () => {
+      if (--dragCount === 0) zone.style.outline = '';
+    });
+
+    zone.addEventListener('dragover', e => e.preventDefault());
+
+    zone.addEventListener('drop', e => {
+      e.preventDefault();
+      dragCount = 0;
+      zone.style.outline = '';
+      const file = e.dataTransfer.files[0];
+      if (!file || !file.type.startsWith('image/')) return;
+      const dt = new DataTransfer();
+      dt.items.add(file);
+      input.files = dt.files;
+      showFile(file);
+    });
+
+    function showFile(file) {
+      prev.src = URL.createObjectURL(file);
+      prev.classList.remove('d-none');
+      if (ph) ph.classList.add('d-none');
+    }
+  })();
+</script>
+{% endblock %}

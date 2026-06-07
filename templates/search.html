@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+{% block title %}ძებნა{% if q %}: {{ q }}{% endif %} — FlaskSocial{% endblock %}
+
+{% block content %}
+{% if q %}
+  <span class="section-label">შედეგები: &ldquo;{{ q }}&rdquo;</span>
+
+  {% if posts %}
+  <div class="row g-3 mt-0">
+    {% for post in posts %}
+    <div class="col-12 col-sm-6 col-lg-4">
+      <div class="post-card h-100">
+        <a href="{{ url_for('posts.view', post_id=post.id) }}" class="d-block">
+          {% if post.image_data %}
+            <img src="{{ url_for('posts.image', post_id=post.id) }}"
+                 class="post-card-img" alt="{{ post.title }}">
+          {% else %}
+            <div class="post-img-ph"><i class="fa fa-image"></i></div>
+          {% endif %}
+        </a>
+        <div class="post-card-body">
+          <div class="post-meta">
+            {% if post.author.profile_pic_data %}
+              <img src="{{ url_for('users.avatar', user_id=post.author.id) }}"
+                   class="av av-sm" alt="">
+            {% else %}
+              <span class="av-ph av-sm-ph">{{ post.author.username[0]|upper }}</span>
+            {% endif %}
+            <a href="{{ url_for('users.profile', user_id=post.author.id) }}"
+               class="post-meta-name flex-grow-1">{{ post.author.username }}</a>
+          </div>
+          <a href="{{ url_for('posts.view', post_id=post.id) }}" class="post-title">
+            {{ post.title }}
+          </a>
+          <p class="post-excerpt mb-0">
+            {{ post.description[:90] }}{% if post.description|length > 90 %}…{% endif %}
+          </p>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  {% else %}
+  <div class="empty-state">
+    <div class="empty-icon"><i class="fa fa-magnifying-glass"></i></div>
+    <h5>ვერ მოიძებნა</h5>
+    <p>&ldquo;{{ q }}&rdquo; — შესაბამისი პოსტი არ მოიძებნა</p>
+  </div>
+  {% endif %}
+
+{% else %}
+<div class="empty-state">
+  <div class="empty-icon"><i class="fa fa-magnifying-glass"></i></div>
+  <h5>მოძებნე პოსტები</h5>
+  <p>ჩაწერე სიტყვა ზედა სარტყელში</p>
+</div>
+{% endif %}
+{% endblock %}

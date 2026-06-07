@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+{% block title %}{{ user.username }} — FlaskSocial{% endblock %}
+
+{% block content %}
+<div class="profile-header mb-4">
+  <div class="d-flex align-items-start gap-4 flex-wrap">
+
+    {% if user.profile_pic_data %}
+      <img src="{{ url_for('users.avatar', user_id=user.id) }}"
+           class="av av-lg" alt="">
+    {% else %}
+      <span class="av-ph av-lg-ph">{{ user.username[0]|upper }}</span>
+    {% endif %}
+
+    <div class="flex-grow-1">
+      <div class="d-flex align-items-center gap-3 flex-wrap mb-3">
+        <h4 class="mb-0 fw-bold">{{ user.username }}</h4>
+        {% if user.id == current_user.id %}
+          <a href="{{ url_for('users.edit_profile') }}" class="btn btn-outline-grad btn-sm">
+            <i class="fa fa-pen fa-xs me-1"></i>პროფილი
+          </a>
+          <a href="{{ url_for('posts.create') }}" class="btn btn-grad btn-sm">
+            <i class="fa fa-plus me-1"></i>ახალი
+          </a>
+        {% endif %}
+      </div>
+
+      <div class="d-flex gap-4 mb-3">
+        <div class="profile-stat">
+          <div class="profile-stat-n">{{ user.post_count }}</div>
+          <div class="profile-stat-l">პოსტი</div>
+        </div>
+      </div>
+
+      {% if user.bio %}
+        <p style="color:var(--text-soft);font-size:0.88rem;line-height:1.5;margin-bottom:0.3rem;">
+          {{ user.bio }}
+        </p>
+      {% endif %}
+      <p style="color:var(--text-muted);font-size:0.75rem;margin:0;">
+        <i class="fa fa-calendar-days me-1"></i>
+        შეუერთდა {{ user.created_at.strftime('%B %Y') }}
+      </p>
+    </div>
+
+  </div>
+</div>
+
+{% if posts %}
+<span class="section-label">პოსტები</span>
+<div class="row g-2 mt-0">
+  {% for post in posts %}
+  <div class="col-4 col-md-3">
+    <a href="{{ url_for('posts.view', post_id=post.id) }}" class="profile-grid-item">
+      {% if post.image_data %}
+        <img src="{{ url_for('posts.image', post_id=post.id) }}" alt="{{ post.title }}">
+      {% else %}
+        <div style="width:100%;height:100%;background:var(--gradient);display:flex;align-items:center;justify-content:center;">
+          <i class="fa fa-image" style="font-size:1.5rem;color:rgba(255,255,255,0.3);"></i>
+        </div>
+      {% endif %}
+      <div class="grid-overlay">
+        <span><i class="fas fa-heart me-1"></i>{{ post.like_count }}</span>
+        <span><i class="far fa-comment me-1"></i>{{ post.comment_count }}</span>
+      </div>
+    </a>
+  </div>
+  {% endfor %}
+</div>
+{% else %}
+<div class="empty-state">
+  <div class="empty-icon"><i class="fa fa-camera"></i></div>
+  <h5>ჯერ არ არის პოსტები</h5>
+  {% if user.id == current_user.id %}
+    <p>გაზიარე შენი პირველი მომენტი</p>
+    <a href="{{ url_for('posts.create') }}" class="btn btn-grad mt-2">
+      <i class="fa fa-plus me-1"></i>პოსტის დამატება
+    </a>
+  {% endif %}
+</div>
+{% endif %}
+{% endblock %}

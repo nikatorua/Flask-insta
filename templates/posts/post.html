@@ -1,0 +1,151 @@
+{% extends 'base.html' %}
+{% block title %}{{ post.title }} — FlaskSocial{% endblock %}
+
+{% block content %}
+<div class="mb-3">
+  <button class="btn-ghost" id="backBtn">
+    <i class="fa fa-arrow-left me-1"></i>უკან
+  </button>
+</div>
+
+<div class="row g-4">
+
+  <div class="col-12 col-lg-7">
+    {% if post.image_data %}
+      <img src="{{ url_for('posts.image', post_id=post.id) }}"
+           class="detail-img" alt="{{ post.title }}">
+    {% else %}
+      <div class="detail-img post-img-ph" style="border-radius:16px;">
+        <i class="fa fa-image"></i>
+      </div>
+    {% endif %}
+  </div>
+
+  <div class="col-12 col-lg-5">
+    <div class="detail-panel">
+
+      <div class="d-flex align-items-center gap-2 pb-3 mb-3"
+           style="border-bottom:1px solid var(--border);">
+        {% if post.author.profile_pic_data %}
+          <img src="{{ url_for('users.avatar', user_id=post.author.id) }}"
+               class="av av-md" alt="">
+        {% else %}
+          <span class="av-ph av-md-ph">{{ post.author.username[0]|upper }}</span>
+        {% endif %}
+        <div class="flex-grow-1">
+          <a href="{{ url_for('users.profile', user_id=post.author.id) }}"
+             style="color:var(--text);text-decoration:none;font-weight:700;font-size:0.9rem;">
+            {{ post.author.username }}
+          </a>
+          <div style="color:var(--text-muted);font-size:0.72rem;">
+            {{ post.created_at.strftime('%d %B, %Y') }}
+          </div>
+        </div>
+        {% if post.user_id == current_user.id %}
+        <div class="d-flex gap-1">
+          <a href="{{ url_for('posts.edit', post_id=post.id) }}" class="btn-ghost" title="რედაქტირება">
+            <i class="fa fa-pen fa-sm"></i>
+          </a>
+          <button class="btn-ghost" style="color:var(--danger);"
+                  data-bs-toggle="modal" data-bs-target="#delModal" title="წაშლა">
+            <i class="fa fa-trash fa-sm"></i>
+          </button>
+        </div>
+        {% endif %}
+      </div>
+
+      <h5 style="font-weight:800;line-height:1.3;margin-bottom:0.5rem;">{{ post.title }}</h5>
+      <p style="color:var(--text-soft);font-size:0.88rem;line-height:1.65;">{{ post.description }}</p>
+
+      <div class="d-flex align-items-center gap-3 py-2 my-2"
+           style="border-top:1px solid var(--border);border-bottom:1px solid var(--border);">
+        <form action="{{ url_for('posts.like', post_id=post.id) }}" method="post">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+          <button type="submit"
+                  class="btn-ghost {% if current_user.has_liked(post) %}liked{% endif %}">
+            <i class="{{ 'fas' if current_user.has_liked(post) else 'far' }} fa-heart"></i>
+            {{ post.like_count }}
+          </button>
+        </form>
+        <span class="btn-ghost" style="pointer-events:none;">
+          <i class="far fa-comment"></i> {{ post.comment_count }}
+        </span>
+      </div>
+
+      <div id="comments" class="flex-grow-1 d-flex flex-column" style="min-height:0;">
+        <span class="section-label">კომენტარები</span>
+
+        <form action="{{ url_for('posts.comment', post_id=post.id) }}" method="post"
+              class="d-flex gap-2 mb-3">
+          {{ form.hidden_tag() }}
+          {{ form.content(class_='form-control form-control-sm',
+                          placeholder='დაწერე კომენტარი...',
+                          rows=1, style='resize:none;') }}
+          {{ form.submit(class_='btn btn-grad btn-sm flex-shrink-0') }}
+        </form>
+
+        <div style="overflow-y:auto;max-height:280px;flex:1;">
+          {% for c in comments %}
+          <div class="comment-row">
+            {% if c.author.profile_pic_data %}
+              <img src="{{ url_for('users.avatar', user_id=c.author.id) }}"
+                   class="av av-sm" alt="" style="margin-top:3px;">
+            {% else %}
+              <span class="av-ph av-sm-ph" style="margin-top:3px;">{{ c.author.username[0]|upper }}</span>
+            {% endif %}
+            <div class="comment-bubble">
+              <div class="d-flex justify-content-between align-items-center">
+                <a href="{{ url_for('users.profile', user_id=c.author.id) }}"
+                   class="comment-username">{{ c.author.username }}</a>
+                <span class="comment-date">{{ c.created_at.strftime('%d %b') }}</span>
+              </div>
+              <p class="comment-text mb-0">{{ c.content }}</p>
+            </div>
+          </div>
+          {% else %}
+          <p style="color:var(--text-muted);font-size:0.82rem;text-align:center;padding:1.5rem 0;">
+            პირველი კომენტარი შენი იყოს!
+          </p>
+          {% endfor %}
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+{% if post.user_id == current_user.id %}
+<div class="modal fade" id="delModal" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered modal-sm">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h6 class="modal-title">პოსტის წაშლა</h6>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body" style="color:var(--text-soft);font-size:0.88rem;">
+        დარწმუნებული ხარ? ეს მოქმედება შეუქცევადია.
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-ghost" data-bs-dismiss="modal">გაუქმება</button>
+        <form action="{{ url_for('posts.delete', post_id=post.id) }}" method="post">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+          <button type="submit" class="btn btn-sm btn-danger">წაშლა</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endif %}
+
+{% block scripts %}
+<script>
+  document.getElementById('backBtn').addEventListener('click', function() {
+    if (history.length > 1) {
+      history.back();
+    } else {
+      window.location.href = '{{ url_for("main.feed") }}';
+    }
+  });
+</script>
+{% endblock %}
+{% endblock %}

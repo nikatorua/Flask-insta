@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% block title %}მომხმარებლები — FlaskSocial{% endblock %}
+
+{% block content %}
+<span class="section-label">ყველა მომხმარებელი</span>
+<div class="row g-3 mt-0">
+  {% for user in users %}
+  <div class="col-6 col-sm-4 col-md-3 col-lg-2">
+    <a href="{{ url_for('users.profile', user_id=user.id) }}" class="user-card">
+      {% if user.profile_pic_data %}
+        <img src="{{ url_for('users.avatar', user_id=user.id) }}"
+             class="av av-lg mx-auto d-block mb-2" alt="">
+      {% else %}
+        <span class="av-ph av-lg-ph mx-auto d-flex mb-2">{{ user.username[0]|upper }}</span>
+      {% endif %}
+      <div style="font-weight:700;font-size:0.88rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">
+        {{ user.username }}
+      </div>
+      <div style="color:var(--text-muted);font-size:0.75rem;">{{ user.post_count }} პოსტი</div>
+    </a>
+  </div>
+  {% else %}
+  <div class="col-12">
+    <div class="empty-state">
+      <div class="empty-icon"><i class="fa fa-users"></i></div>
+      <h5>მომხმარებლები არ არიან</h5>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+{% endblock %}
