@@ -9,7 +9,6 @@
       <p class="auth-logo mb-1">
         <i class="fa-brands fa-instagram"></i> FlaskSocial
       </p>
-      <p style="color:var(--text-muted);font-size:0.85rem;">შედი და ნახე მეგობრების მომენტები</p>
     </div>
 
     <form method="post" novalidate>
@@ -18,18 +17,18 @@
       <div class="mb-3">
         {{ form.email.label(class_='form-label') }}
         {{ form.email(class_='form-control' + (' is-invalid' if form.email.errors else ''),
-                      placeholder='you@example.com') }}
+        placeholder='you@example.com') }}
         {% for e in form.email.errors %}
-          <div class="invalid-feedback">{{ e }}</div>
+        <div class="invalid-feedback">{{ e }}</div>
         {% endfor %}
       </div>
 
       <div class="mb-4">
         {{ form.password.label(class_='form-label') }}
         {{ form.password(class_='form-control' + (' is-invalid' if form.password.errors else ''),
-                         placeholder='••••••••') }}
+        placeholder='••••••••') }}
         {% for e in form.password.errors %}
-          <div class="invalid-feedback">{{ e }}</div>
+        <div class="invalid-feedback">{{ e }}</div>
         {% endfor %}
       </div>
 

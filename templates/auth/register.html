@@ -9,7 +9,6 @@
       <p class="auth-logo mb-1">
         <i class="fa-brands fa-instagram"></i> FlaskSocial
       </p>
-      <p style="color:var(--text-muted);font-size:0.85rem;">შექმენი ანგარიში და დაიწყე გაზიარება</p>
     </div>
 
     <form method="post" novalidate>
@@ -18,36 +17,36 @@
       <div class="mb-3">
         {{ form.username.label(class_='form-label') }}
         {{ form.username(class_='form-control' + (' is-invalid' if form.username.errors else ''),
-                         placeholder='ninja_coder') }}
+        placeholder='John_Doe') }}
         {% for e in form.username.errors %}
-          <div class="invalid-feedback">{{ e }}</div>
+        <div class="invalid-feedback">{{ e }}</div>
         {% endfor %}
       </div>
 
       <div class="mb-3">
         {{ form.email.label(class_='form-label') }}
         {{ form.email(class_='form-control' + (' is-invalid' if form.email.errors else ''),
-                      placeholder='you@example.com') }}
+        placeholder='you@example.com') }}
         {% for e in form.email.errors %}
-          <div class="invalid-feedback">{{ e }}</div>
+        <div class="invalid-feedback">{{ e }}</div>
         {% endfor %}
       </div>
 
       <div class="mb-3">
         {{ form.password.label(class_='form-label') }}
         {{ form.password(class_='form-control' + (' is-invalid' if form.password.errors else ''),
-                         placeholder='••••••••') }}
+        placeholder='••••••••') }}
         {% for e in form.password.errors %}
-          <div class="invalid-feedback">{{ e }}</div>
+        <div class="invalid-feedback">{{ e }}</div>
         {% endfor %}
       </div>
 
       <div class="mb-4">
         {{ form.confirm.label(class_='form-label') }}
         {{ form.confirm(class_='form-control' + (' is-invalid' if form.confirm.errors else ''),
-                        placeholder='••••••••') }}
+        placeholder='••••••••') }}
         {% for e in form.confirm.errors %}
-          <div class="invalid-feedback">{{ e }}</div>
+        <div class="invalid-feedback">{{ e }}</div>
         {% endfor %}
       </div>
 
